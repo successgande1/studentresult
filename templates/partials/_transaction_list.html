@@ -1,0 +1,105 @@
+{% load humanize %}
+
+<div class="row">
+    <!-- Your Profile Views Chart -->
+    <div class="col-lg-6 m-b30">
+        <div class="widget-box">
+            <div class="wc-title">
+                {% if user.is_authenticated and user.profile.role == 'admin' or user.is_superuser or user.profile.role == 'manager' %}
+                <h4>Recently Registered Customers</h4>
+                {% elif user.is_authenticated and user.profile.role == 'cashier' %}
+                <h4>My Customers</h4>
+                {% endif %}
+            </div>
+            <div class="widget-inner">
+                <div class="new-user-list">
+                    <ul>
+                        {% for customer in customers %}
+                        <li>
+                            <span class="new-users-pic">
+                                <img src="{{ customer.customer.profile.image.url }}" alt=""/>
+                            </span>
+                            <span class="new-users-text">
+                                <a href="#" class="new-users-name" style="font-size:0.8rem;">{{ customer.customer.profile.full_name }} </a>
+                                <span class="new-users-info" style="color:red;">Acct. No:{{ customer.account_number }} </span>
+                            </span>
+                            <span class="new-users-text">
+                                <a href="#" class="new-users-name" style="font-size:0.8rem;">{{ customer.customer.profile.phone }} </a>
+                                <span class="new-users-info" style="color:green;">Bal. N{{ customer.account_balance|intcomma }} </span>
+                            </span>
+                            <span class="new-users-btn">
+                                <a href=" {% url 'customer_deposit' customer.pk %} " class="btn button-sm outline">Deposit</a>
+                            </span>
+                        </li>
+                        {% endfor %}
+                      
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 m-b30">
+        <div class="widget-box">
+            <div class="wc-title">
+                {% if user.is_authenticated and user.profile.role == 'admin' or user.is_superuser or user.profile.role == 'manager' %}
+                <h4>Recently Transactions</h4>
+                {% elif user.is_authenticated and user.profile.role == 'cashier' %}
+                <h4>My Recent Transactions</h4>
+                {% endif %}
+            </div>
+            <div class="widget-inner">
+                <div class="orders-list">
+                    <ul>
+                       
+                        {% for transaction in transactions %}
+                         
+                                <li>
+                                    <span class="orders-title">
+                                        <a href="#" class="orders-title-name">
+                                            
+                                            {{transaction.transaction_type|capfirst}} 
+                                            
+                                        </a>
+                                        <span class="orders-info" style="color:orange;"> {{transaction.transaction_date |naturaltime }} </span>
+                                    </span>
+                                    <span class="orders-title">
+                                        <a href="#" class="orders-title-name" style="color:green; font-size:0.8rem;">-- |N{{transaction.amount|intcomma}} </a>
+                                        <span class="orders-info"> - |By: {{transaction.added_by }} </span>
+                                    </span>
+                                    <span class="orders-title">
+                                        <a href="#" class="orders-title-name" style="font-size: 0.7rem;"> | {{transaction.customer.customer.profile.full_name}} </a>
+                                        <span class="orders-info" style="color:red;"> - |Acct. No: {{transaction.customer.account_number }} </span>
+                                    </span>
+                                    <span class="orders-btn">
+                                        {% if transaction.transaction_type == 'deposit' %}
+                                        <a href="#" class="btn button-sm green">
+                                            Deposit
+                                        </a>
+                                        {% elif transaction.transaction_type == 'withdraw'  %}
+                                        <a href="#" class="btn button-sm red">
+                                            Withdrawal
+                                        </a>
+                                        {% else %}
+                                        <a href="#" class="btn button-sm danger">
+                                           Charges
+                                        </a>
+                                        {% endif %}
+                                    </span>
+                                </li>
+
+                        {% endfor %}
+
+                        
+                       
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+ 
+    
+</div>

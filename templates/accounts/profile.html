@@ -1,0 +1,100 @@
+{% extends 'dashboard_base.html' %}
+
+{% block title %} Dashboard | {{ user.username }} {% endblock %}
+
+{% load static %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<!-- Left sidebar menu start -->
+{% include 'partials/_LeftSideBar.html' %}
+<!-- Left sidebar menu end -->
+
+<main class="ttr-wrapper">
+    <div class="container-fluid">
+        <div class="db-breadcrumb">
+            <h4 class="breadcrumb-title" style="color: rgb(4, 149, 16);"> {{user.profile.role|capfirst}} - {{user.username|capfirst}} Profile</h4>
+            <ul class="db-breadcrumb-list">
+                <li><a href="#"><i class="fa fa-home"></i>Home</a></li> 
+                <li style="color: blue;">{{user.username}} Profile</li>
+            </ul>
+        </div>	
+        <div class="row">
+            <!-- Your Profile Views Chart -->
+            <div class="col-lg-12 m-b30">
+                <div class="container">
+                    <div class="row my-4">
+
+                      <!--Alert Message Division-->
+                      {% include 'partials/_alerts.html' %}
+                      <!--Alert Message Division Ends-->
+
+                      <!--Notice Board Division-->
+                      {% include 'partials/_notice_board.html' %}
+                      <!--Notice Board Division Ends-->
+
+                        <div class="col-md-8"> 
+                           <div class="card">
+                               <div class="card-header bg-info text-white">
+                                {{ user.username }} Profile
+                               </div>
+                               <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                          <span class="h4">Profile Information</span><a class="btn btn-info btn-sm float-right" href="{% url 'accounts-profile-update' %}">Edit</a>
+                                          <hr>
+                                        <table class="table bg-white table-borderless">
+                                            <tbody>
+                                                  <tr>
+                                                    <th scope="row">Name</th>
+                                                    <td>{{user.profile.full_name|capfirst}}</td>
+                                                  </tr>   
+                                                  <tr>
+                                                    <th scope="row">Phone</th>
+                                                    <td>{{user.profile.phone}}</td>                                   
+                                                  </tr>
+                                                  <tr>
+                                                    <th scope="row">Role</th>
+                                                    
+                                                    <td>
+                                                      {% if user.is_superuser %}
+                                                      Super Admin
+                                                      {% else %}
+                                                      {{user.profile.role|capfirst}}
+                                                      {% endif %} 
+                                                    </td> 
+                                                                                     
+                                                  </tr>   
+                                     
+                                                  <tr>
+                                                    <th scope="row">Address</th>
+                                                    <td>{{user.profile.address|capfirst}}</td>                                   
+                                                  </tr>                   
+                                             </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-4">
+                                      {% if user.profile.image %}
+                                        <img class="img-thumbnail" src=" {{ user.profile.image.url }} " alt="profile image">
+                                      {% else %}
+                                      No image available
+                                      {% endif %}
+                                      </div>
+                                </div>
+                               </div>
+                           </div>
+                        </div>
+                        
+                    </div>
+                  </table>
+                </div>
+            </div>
+            <!-- Your Profile Views Chart END-->
+        </div>
+    </div>
+</main>
+
+{% endblock %}

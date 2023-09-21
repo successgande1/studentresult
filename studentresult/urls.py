@@ -22,8 +22,10 @@ from django.contrib import admin
 from django.urls import path, include
 from accounts import views as account_view
 from django.contrib.auth import views as auth_views
+import debug_toolbar
 
 urlpatterns = [
+    path('__debug__/', include(debug_toolbar.urls)), 
     path('admin/', admin.site.urls),
     path('404/', custom_page_not_found, name='custom_404'),
     path('403/', custom_page_forbidden, name='custom_403'),

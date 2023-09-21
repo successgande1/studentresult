@@ -43,9 +43,11 @@ INSTALLED_APPS = [
     'results.apps.ResultsConfig',
     'crispy_forms',
     'crispy_bootstrap4',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -133,6 +135,12 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'studentresult/static')
+]
+
+################ TO BE REMOVED DURING PRODUCTION ##################
+
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]
 
 # Default primary key field type

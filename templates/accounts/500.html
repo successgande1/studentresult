@@ -1,52 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+{% extends 'login_base.html' %}
 
-        .container {
-            text-align: center;
-        }
+{% load static %}
 
-        .error-code {
-            font-size: 100px;
-            color: #d9534f;
-        }
+{% block title %} 500 {% endblock %}
 
-        .error-message {
-            font-size: 24px;
-            color: #333;
-            margin-top: 10px;
-        }
+{% load crispy_forms_tags %}
 
-        .home-link {
-            color: #337ab7;
-            text-decoration: none;
-            font-weight: bold;
-        }
+{% block content %}
 
-        .home-link:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="error-code">500</div>
-        <div class="error-message">Oops! The page you're looking for doesn't exist.</div>
-        <p><a class="home-link" href="{% url 'accounts-login' %} ">Go back to the home page</a></p>
-    </div>
-</body>
-</html>
+<div class="page-wraper">
+	<div id="loading-icon-bx"></div>
+	<div class="account-form">
+		<div class="account-head" style="background-image: url('{% static 'assets/images/background/bg2.jpg' %}');">
+			<a href="#"><img src="{% static 'assets/images/logo-white-2.png' %}" alt=""></a>
+		</div>
+		<div class="account-form-inner">
+			<div class="account-container"> 
+				<div class="heading-bx left">
+					<h2 class="title-head">error <span>500</span></h2>
+					
+				</div>	
+                <div class="container">
+                    
+                    <div class="error-message">Oops! The page you're looking for doesn't exist.</div>
+                    <p><a class="home-link" href="{% url 'account-login' %} ">Go back to the home page</a></p>
+                </div>
+				
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}
+
+
+    
+

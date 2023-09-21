@@ -90,7 +90,7 @@ class SubscriptionHistory(models.Model):
     def __str__(self):
         return f'Subscription for {self.business_account.name} ({self.plan.name})'
 
-class AccountProfile(models.Model):
+class Profile(models.Model):
     STATE_CHOICES = [
         ('benue', 'Benue'),
     ]

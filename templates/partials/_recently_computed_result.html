@@ -1,4 +1,4 @@
-{% load humanize %}
+
 
 <div class="row">
     <!-- Your Profile Views Chart -->
@@ -6,7 +6,7 @@
         <div class="widget-box">
             <div class="wc-title">
                 {% if user.is_authenticated and user.profile.role == 'admin' or user.is_superuser or user.profile.role == 'manager' %}
-                <h4>Recently Registered Customers</h4>
+                <h4>Classes with 100% Completed Results</h4>
                 {% elif user.is_authenticated and user.profile.role == 'cashier' %}
                 <h4>My Customers</h4>
                 {% endif %}
@@ -17,7 +17,7 @@
                         {% for customer in customers %}
                         <li>
                             <span class="new-users-pic">
-                                <img src="{{ customer.customer.profile.image.url }}" alt=""/>
+                                <img src="" alt=""/>
                             </span>
                             <span class="new-users-text">
                                 <a href="#" class="new-users-name" style="font-size:0.8rem;">{{ customer.customer.profile.full_name }} </a>
@@ -25,10 +25,10 @@
                             </span>
                             <span class="new-users-text">
                                 <a href="#" class="new-users-name" style="font-size:0.8rem;">{{ customer.customer.profile.phone }} </a>
-                                <span class="new-users-info" style="color:green;">Bal. N{{ customer.account_balance|intcomma }} </span>
+                                <span class="new-users-info" style="color:green;">Bal. N </span>
                             </span>
                             <span class="new-users-btn">
-                                <a href=" {% url 'customer_deposit' customer.pk %} " class="btn button-sm outline">Deposit</a>
+                                <a href="  " class="btn button-sm outline">Deposit</a>
                             </span>
                         </li>
                         {% endfor %}
@@ -42,7 +42,7 @@
         <div class="widget-box">
             <div class="wc-title">
                 {% if user.is_authenticated and user.profile.role == 'admin' or user.is_superuser or user.profile.role == 'manager' %}
-                <h4>Recently Transactions</h4>
+                <h4>Recently Computed Result by Class Arms</h4>
                 {% elif user.is_authenticated and user.profile.role == 'cashier' %}
                 <h4>My Recent Transactions</h4>
                 {% endif %}
@@ -57,13 +57,13 @@
                                     <span class="orders-title">
                                         <a href="#" class="orders-title-name">
                                             
-                                            {{transaction.transaction_type|capfirst}} 
+                                            
                                             
                                         </a>
-                                        <span class="orders-info" style="color:orange;"> {{transaction.transaction_date |naturaltime }} </span>
+                                        <span class="orders-info" style="color:orange;">  </span>
                                     </span>
                                     <span class="orders-title">
-                                        <a href="#" class="orders-title-name" style="color:green; font-size:0.8rem;">-- |N{{transaction.amount|intcomma}} </a>
+                                        <a href="#" class="orders-title-name" style="color:green; font-size:0.8rem;">-- |N</a>
                                         <span class="orders-info"> - |By: {{transaction.added_by }} </span>
                                     </span>
                                     <span class="orders-title">

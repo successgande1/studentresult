@@ -29,18 +29,22 @@
             <ul class="ttr-header-navigation">
                 
                 <li>
+                    {% if user.is_authenticated %}
                     <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar">
-                        {% if user.is_authenticated %}
-                        <img alt="" src="" width="32" height="32">
-                        {% endif %}
+                        
+                        <img class="img-thumbnail"  alt="user image" src=" {{ user.profile.image.url }}" >
+                        
                     </span></a>
                     <div class="ttr-header-submenu">
                         <ul>
-                            <li><a href=" ">My profile</a></li>
+                            
+                            <li><a href=" {% url 'account-profile' %} ">My profile</a></li>
                            
-                            <li><a href="">Logout</a></li>
+                            <li><a href=" {% url 'account-logout' %} ">Logout</a></li>
+                            
                         </ul>
                     </div>
+                    {% endif %}
                 </li>
                
             </ul>

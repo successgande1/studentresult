@@ -18,62 +18,30 @@
         <nav class="ttr-sidebar-navi">
             <ul>
                 <li>
-                    <a href="{% url 'accounts-dashboard' %}" class="ttr-material-button">
+                    <a href="{% url 'account-dashboard' %}" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-home"></i></span>
                         <span class="ttr-label">Dashboard</span>
                     </a>
                 </li>
                 
                 <!--Check if User is login and is also a staff and a superuser-->
-                {% if user.is_authenticated and user.profile.role == 'organization' or user.profile.role == 'admin' or user.is_superuser %}
+                {% if user.is_authenticated and  user.profile.role == 'admin' or user.is_superuser %}
                 <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
-                        <span class="ttr-label">Staff Management</span>
+                        <span class="ttr-label">User Management</span>
                         <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
                     </a>
                     <ul>
                         <li>
-                            <a href="{% url 'accounts-create-user' %} " class="ttr-material-button"><span class="ttr-label">Add Staff User</span></a>
+                            <a href=" {% url 'account-create-management-staff' %} " class="ttr-material-button"><span class="ttr-label">Add Management Staff</span></a>
                         </li>
                         <li>
-                            <a href="{% url 'accounts-staff-list' %} " class="ttr-material-button"><span class="ttr-label">View Staff Users</span></a>
+                            <a href=" {% url 'account-staff-list' %} " class="ttr-material-button"><span class="ttr-label">View Staff Users</span></a>
                         </li>
                     </ul>
                 </li>
-                <li>
-                    <a href="#" class="ttr-material-button">
-                        <span class="ttr-icon"><i class="ti-book"></i></span>
-                        <span class="ttr-label">Customer Management</span>
-                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
-                    </a>
-                    <ul>
-                        <li>
-                            <a href="{% url 'customer-list' %} " class="ttr-material-button"><span class="ttr-label">Customers</span></a>
-                        </li>
-                        <li>
-                            <a href="{% url 'request-list' %}  " class="ttr-material-button"><span class="ttr-label">Customer Request</span></a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" class="ttr-material-button">
-                        <span class="ttr-icon"><i class="ti-calendar"></i></span>
-                        <span class="ttr-label">Monthly Charges</span>
-                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
-                    </a>
-                    <ul>
-                        <li>
-                            <a href="{% url 'process_service_charge' %}" class="ttr-material-button"><span class="ttr-label">Customer Charges</span></a>
-                        </li>
-                        <li>
-                            <a href="{% url 'charged_customers_list' %}" class="ttr-material-button"><span class="ttr-label">Charged Customers</span></a>
-                        </li>
-                    </ul>
-                </li>
-
-                
-                
+              
                 <li>
                     <a href="#" class="ttr-material-button">
                         <span class="ttr-icon"><i class="fa fa-book"></i></span>
@@ -84,27 +52,36 @@
                         
 
                         <li>
-                            <a href=" {% url 'transaction-report' %} " class="ttr-material-button"><span class="ttr-label">Transactions</span></a>
+                            <a href="  " class="ttr-material-button"><span class="ttr-label">Academic Session</span></a>
                         </li>
 
                         <li>
-                            <a href="{% url 'user-transaction-report' %}" class="ttr-material-button"><span class="ttr-label">Staff Transactions</span></a>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">School Teachers</span></a>
                         </li>
                         <li>
-                            <a href="{% url 'admin-report' %}" class="ttr-material-button"><span class="ttr-label">Report Summary</span></a>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">Class Subjects</span></a>
+                        </li>
+                        <li>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">Class Arms</span></a>
+                        </li>
+                        <li>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">Form Masters</span></a>
+                        </li>
+                        <li>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">Results</span></a>
                         </li>
 
                     </ul>
                 </li>
                 <li>
-                    <a href="{% url 'accounts-change-password' %}" class="ttr-material-button">
+                    <a href=" {% url 'account-change-password' %}" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
                         <span class="ttr-label">Change Password</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href=" {% url 'accounts-logout' %} " class="ttr-material-button">
+                    <a href=" {% url 'account-logout' %} " class="ttr-material-button">
                         <span class="ttr-icon"><i class="fa fa-smile-o"></i></span>
                         <span class="ttr-label">User Logout</span></a>
                 </li>
@@ -112,7 +89,7 @@
                 {% elif user.is_authenticated and user.profile.role == 'manager' or user.profile.role == 'cashier' %}
 
                 <li>
-                    <a href=" {% url 'savings-account' %} " class="ttr-material-button">
+                    <a href="  " class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label"> Create Account</span>
                     </a>
@@ -127,11 +104,11 @@
                         
 
                         <li>
-                            <a href=" {% url 'customer-list' %} " class="ttr-material-button"><span class="ttr-label">Customers</span></a>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">Customers</span></a>
                         </li>
 
                         <li>
-                            <a href="{% url 'request-list' %}" class="ttr-material-button"><span class="ttr-label">Customer Request</span></a>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">Customer Request</span></a>
                         </li>
                         
 
@@ -147,20 +124,20 @@
                     <ul>
                       
                         <li>
-                            <a href=" {% url 'manager-cashier-report' %}" class="ttr-material-button"><span class="ttr-label">My Deposits</span></a>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">My Deposits</span></a>
                         </li>
 
                     </ul>
                 </li>
                 <li>
-                    <a href="{% url 'accounts-change-password' %}" class="ttr-material-button">
+                    <a href="" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
                         <span class="ttr-label">Change Password</span>
                     </a>
                 </li>
              
                 <li>
-                    <a href=" {% url 'accounts-logout' %} " class="ttr-material-button">
+                    <a href=" {% url 'account-logout' %} " class="ttr-material-button">
                         <span class="ttr-icon"><i class="fa fa-smile-o"></i></span>
                         <span class="ttr-label">User Logout</span></a>
                 </li>
@@ -183,21 +160,21 @@
                     <ul>
                       
                         <li>
-                            <a href="{% url 'customer-transaction-report' %}" class="ttr-material-button"><span class="ttr-label">My Transactions</span></a>
+                            <a href=" " class="ttr-material-button"><span class="ttr-label">My Transactions</span></a>
                         </li>
                         
                     </ul>
                     
                 </li>
                 <li>
-                    <a href="{% url 'accounts-change-password' %}" class="ttr-material-button">
+                    <a href="{% url 'account-change-password' %}" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
                         <span class="ttr-label">Change Password</span>
                     </a>
                 </li>
              
                 <li>
-                    <a href=" {% url 'accounts-logout' %} " class="ttr-material-button">
+                    <a href=" {% url 'account-logout' %} " class="ttr-material-button">
                         <span class="ttr-icon"><i class="fa fa-smile-o"></i></span>
                         <span class="ttr-label">User Logout</span></a>
                 </li>

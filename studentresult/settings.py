@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from decouple import config
 import os
 from pathlib import Path
+# MESSAGING
+from django.contrib.messages import constants as messsages
+MESSAGE_TAGS = {
+
+    messsages.ERROR: 'danger'
+}
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -137,7 +144,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'studentresult/static')
 ]
 
-################ TO BE REMOVED DURING PRODUCTION ##################
+# TO BE REMOVED DURING PRODUCTION ##################
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -152,15 +159,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
 
-#MESSAGING
-from django.contrib.messages import constants as messsages
-MESSAGE_TAGS = {
-
-    messsages.ERROR: 'danger'
-}
-
 LOGIN_URL = 'account-login'
 
-#Redirect User after Successful login
+# Redirect User after Successful login
 LOGIN_REDIRECT_URL = 'account-dashboard'
-

@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
-from random import randint
 import uuid
-from uuid import UUID
 from imagekit.models import ProcessedImageField
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
@@ -24,6 +21,7 @@ class FileExtensionValidator:
             valid_extensions = ', '.join(self.extensions)
             raise ValidationError(f"Invalid file extension. Only {valid_extensions} files are allowed.")
 
+
 image_extensions = ['jpeg', 'jpg', 'gif', 'png']
 
 
@@ -37,7 +35,7 @@ class SubscriptionPlan(models.Model):
         return self.name
 
  
-#Ticket Model
+# Ticket Model
 class SubscriptionTicket(models.Model):
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
     pin = models.UUIDField(default=uuid.uuid4, unique=True)  # Use UUID for unique PINs
@@ -68,6 +66,7 @@ class SubscriptionTicket(models.Model):
         pin = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
         return pin
 
+
 class BusinessAccount(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -79,7 +78,8 @@ class BusinessAccount(models.Model):
     
     def __str__(self):
         return self.name
-    
+
+
 class SubscriptionHistory(models.Model):
     business_account = models.ForeignKey(BusinessAccount, on_delete=models.CASCADE)
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
@@ -89,6 +89,7 @@ class SubscriptionHistory(models.Model):
 
     def __str__(self):
         return f'Subscription for {self.business_account.name} ({self.plan.name})'
+
 
 class Profile(models.Model):
     STATE_CHOICES = [
@@ -109,15 +110,7 @@ class Profile(models.Model):
     state = models.CharField(max_length=50, choices=STATE_CHOICES, null=True)
     lga = models.CharField(max_length=50, choices=LGA_CHOICES, null=True)
     is_active = models.BooleanField(default=True)  
-    image = ProcessedImageField(
-                                    upload_to='profile_images',
-                                    processors=[Transpose(), ResizeToFill(150, 200)],
-                                    format='JPEG',
-                                    options={'quality': 97},
-                                    validators=[FileExtensionValidator(image_extensions)],
-                                    default='avatar.jpg'
-                                )
-    
+    image = ProcessedImageField(upload_to='profile_images', processors=[Transpose(), ResizeToFill(150, 200)], format='JPEG', options={'quality': 97}, validators=[FileExtensionValidator(image_extensions)], default='avatar.jpg')
     last_updated = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -6,7 +6,7 @@
 
 {% load crispy_forms_tags %}
 
-{% load humanize %}
+
 
 {% block content %}
 
@@ -62,7 +62,7 @@
           </div>
         </div>
         
-        {% if user.is_authenticated and user.profile.role == 'organization' or user.profile.role == 'admin' or user.is_superuser %}
+        {% if user.is_authenticated and user.profile.role == 'admin' or user.is_superuser %}
         <div class="container">
             <div class="row">
                
@@ -128,9 +128,9 @@
                                       
                                     <div class="button-container">
                                         {% if worker.is_active %}
-                                        <a class="btn btn-danger withdraw-button" href="{% url 'accounts-disable-user' worker.pk %} ">Disable</a>
+                                        <a class="btn btn-danger withdraw-button" href="{% url 'account-disable-user' worker.pk %} ">Disable</a>
                                         {% else %}
-                                        <a class="btn btn-info deposit-button" href="{% url 'accounts-enable-user' worker.pk %}">Enable</a>
+                                        <a class="btn btn-info deposit-button" href="{% url 'account-enable-user' worker.pk %}">Enable</a>
                                         {% endif %}
                                       
                                     </div>

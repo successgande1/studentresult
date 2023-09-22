@@ -44,18 +44,38 @@
                                <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-8">
-                                          <span class="h4">Profile Information</span><a class="btn btn-info btn-sm float-right" href="{% url 'accounts-profile-update' %}">Edit</a>
+                                          <span class="h4">Profile Information</span><a class="btn btn-info btn-sm float-right" href=" ">Update</a>
                                           <hr>
                                         <table class="table bg-white table-borderless">
                                             <tbody>
+                                              {% if not user.profile.full_name %}
+                                                      
+                                              <tr><th>Profile:</th>
+                                              <td> <a href="">Yet to be Updated</a>  </td>
+                                              </tr>
+                                                      
+                                              {% else %}
                                                   <tr>
                                                     <th scope="row">Name</th>
-                                                    <td>{{user.profile.full_name|capfirst}}</td>
+                                                    <td>
+                                                      
+
+                                                      {{user.profile.full_name|capfirst}}
+                                                      
+                                                      
+                                                      
+                                                    </td>
                                                   </tr>   
                                                   <tr>
                                                     <th scope="row">Phone</th>
-                                                    <td>{{user.profile.phone}}</td>                                   
+                                                    <td>
+                                                      {{user.profile.phone}}
+                                                    </td>                                   
                                                   </tr>
+                                                  <tr>
+                                                    <th scope="row">Address</th>
+                                                    <td>{{user.profile.address|capfirst}}</td>                                   
+                                                  </tr>  
                                                   <tr>
                                                     <th scope="row">Role</th>
                                                     
@@ -68,11 +88,8 @@
                                                     </td> 
                                                                                      
                                                   </tr>   
-                                     
-                                                  <tr>
-                                                    <th scope="row">Address</th>
-                                                    <td>{{user.profile.address|capfirst}}</td>                                   
-                                                  </tr>                   
+                                                  {% endif %}
+                                                                   
                                              </tbody>
                                         </table>
                                     </div>

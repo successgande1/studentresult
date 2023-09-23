@@ -1,11 +1,23 @@
 from django.urls import path
 
 from . import views
+from .views import (
+    SubscriptionPlanListView,
+    SubscriptionPlanDetailView,
+    SubscriptionPlanCreateView,
+    SubscriptionPlanUpdateView,
+    SubscriptionPlanDeleteView,
+)
 from django.contrib.auth import views as auth_view
 
 urlpatterns = [
     path('account/login/', auth_view.LoginView.as_view(template_name='accounts/login.html'), name='account-login'),
     path('account/dashboard/', views.index, name='account-dashboard'),
+    path('subscription-plans/', SubscriptionPlanListView.as_view(), name='subscription-plan-list'),
+    path('subscription-plans/<int:pk>/', SubscriptionPlanDetailView.as_view(), name='subscription-plan-detail'),
+    path('subscription-plans/create/', SubscriptionPlanCreateView.as_view(), name='subscription-plan-create'),
+    path('subscription-plans/<int:pk>/update/', SubscriptionPlanUpdateView.as_view(), name='subscription-plan-update'),
+    path('subscription-plans/<int:pk>/delete/', SubscriptionPlanDeleteView.as_view(), name='subscription-plan-delete'),
     path('create/management/staff/', views.create_management_staff, name='account-create-management-staff'),
     path('staff/list/', views.staff_list, name='account-staff-list'),
     path('staff/profile/', views.user_profile, name='account-profile'),

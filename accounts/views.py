@@ -5,6 +5,10 @@ from django.contrib.auth import authenticate, update_session_auth_hash
 from .models import Profile
 from django.core.paginator import Paginator
 from django.db.models import Q
+from .forms import SubscriptionPlanForm
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import SubscriptionPlan
+from django.urls import reverse_lazy
 # from datetime import datetime
 # import datetime
 # from django.contrib.auth.models import User
@@ -42,6 +46,50 @@ def user_profile(request):
         'page_title': 'Profile',
     }
     return render(request, 'accounts/profile.html', context)
+
+
+class SubscriptionPlanCreateView(CreateView):
+    model = SubscriptionPlan
+    template_name = 'accounts/subscription_plan_form.html'
+    form_class = SubscriptionPlanForm  # Use the form for creating
+
+    def form_valid(self, form):
+        # Save the form and add a success message
+        form.save()
+        messages.success(self.request, 'Subscription plan updated successfully.')
+        return super().form_valid(form)
+
+    success_url = reverse_lazy('subscription-plan-list')
+
+
+class SubscriptionPlanListView(ListView):
+    model = SubscriptionPlan
+    template_name = 'accounts/subscription_plan_list.html'
+    context_object_name = 'subscription_plans'  # Optional: Use a custom name for the object_list
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add additional context data here
+        context['additional_data'] = 'Some additional data you want to pass to the template'
+        return context
+
+
+class SubscriptionPlanDetailView(DetailView):
+    model = SubscriptionPlan
+    template_name = 'subscription_plan_detail.html'
+
+
+class SubscriptionPlanUpdateView(UpdateView):
+    model = SubscriptionPlan
+    template_name = 'subscription_plan_form.html'
+    form_class = SubscriptionPlanForm  # Use the form for updating
+
+
+class SubscriptionPlanDeleteView(DeleteView):
+    model = SubscriptionPlan
+    template_name = 'subscription_plan_confirm_delete.html'
+    success_url = '/subscription-plans/'
 
 
 # Change user password view

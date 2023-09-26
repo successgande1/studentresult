@@ -26,11 +26,10 @@ image_extensions = ['jpeg', 'jpg', 'gif', 'png']
 
 
 class SubscriptionPlan(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    duration_months = models.IntegerField()
-
+    
     def __str__(self):
         return self.name
 
@@ -38,8 +37,9 @@ class SubscriptionPlan(models.Model):
 # Ticket Model
 class SubscriptionTicket(models.Model):
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
-    pin = models.UUIDField(default=uuid.uuid4, unique=True)  # Use UUID for unique PINs
+    pin = models.UUIDField(default=uuid.uuid4, unique=True)
     expiration_date = models.DateTimeField()
+    duration_days = models.IntegerField()
 
     def __str__(self):
         return f'Ticket for {self.plan} - Pin: {self.pin}'
@@ -50,11 +50,10 @@ class SubscriptionTicket(models.Model):
     def save(self, *args, **kwargs):
         if not self.pin:
             self.pin = self.generate_pin()
-        if not self.expiration_date:
-            if self.plan.duration_months == 12:
-                self.expiration_date = timezone.now() + timedelta(days=365)
-            elif self.plan.duration_months == 3:
-                self.expiration_date = timezone.now() + timedelta(days=90)
+
+        # Calculate the expiration date based on the duration of the associated subscription plan
+        self.expiration_date = timezone.now() + timedelta(days=self.duration_days)
+
         super().save(*args, **kwargs)
 
     @staticmethod

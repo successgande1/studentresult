@@ -7,11 +7,25 @@ from .models import SubscriptionPlan
 class SubscriptionPlanForm(forms.ModelForm):
     name = forms.CharField(max_length=60, required=True, label='Plan Name:')
     description = forms.CharField(max_length=120, required=True, label='Describe Plan:')
-    duration_months = forms.IntegerField(required=True, label='Duration in Months:')
-
+    
     class Meta:
         model = SubscriptionPlan
-        fields = ['name', 'description', 'price', 'duration_months']
+        fields = ['name', 'description', 'price']
+
+
+class GenerateVoucherForm(forms.Form):
+    plan_id = forms.ModelChoiceField(
+        queryset=SubscriptionPlan.objects.all(),
+        label="Select a Subscription Plan",
+        empty_label=None,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    duration_days = forms.IntegerField(
+        label="Duration in Days",
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=True,
+    )
 
 
 class ManagementStaffCreationForm(UserCreationForm):

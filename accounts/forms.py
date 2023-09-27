@@ -13,7 +13,7 @@ class SubscriptionPlanForm(forms.ModelForm):
         fields = ['name', 'description', 'price']
 
 
-class GenerateVoucherForm(forms.Form):
+class GenerateSubscriptionForm(forms.Form):
     plan_id = forms.ModelChoiceField(
         queryset=SubscriptionPlan.objects.all(),
         label="Select a Subscription Plan",

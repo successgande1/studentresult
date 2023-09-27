@@ -35,7 +35,7 @@ class SubscriptionPlan(models.Model):
 
  
 # Ticket Model
-class SubscriptionTicket(models.Model):
+class Subscription(models.Model):
     plan = models.ForeignKey(SubscriptionPlan, on_delete=models.CASCADE)
     pin = models.UUIDField(default=uuid.uuid4, unique=True)
     expiration_date = models.DateTimeField()
@@ -71,7 +71,7 @@ class BusinessAccount(models.Model):
     description = models.TextField()
     address = models.CharField(max_length=200, null=True)
     state = models.CharField(max_length=50, null=True)
-    subscription_plan = models.ForeignKey(SubscriptionTicket, on_delete=models.CASCADE, null=True)
+    subscription_plan = models.ForeignKey(Subscription, on_delete=models.CASCADE, null=True)
     is_active = models.BooleanField(default=True)
     activated_date = models.DateField(auto_now_add=True)
     

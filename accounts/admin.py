@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, SubscriptionPlan, SubscriptionTicket, BusinessAccount, SubscriptionHistory
+from .models import Profile, SubscriptionPlan, Subscription, BusinessAccount, SubscriptionHistory
 
 
 # Register your models here.
@@ -14,12 +14,12 @@ admin.site.register(Profile, ProfileAdmin)
 admin.site.register(SubscriptionPlan)
 
 
-class SubscriptionTicketAdmin(admin.ModelAdmin):
-    list_display = ('plan', 'pin', 'expiration_date')
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('plan', 'pin', 'expiration_date', 'duration_days')
     list_per_page = 6
 
 
-admin.site.register(SubscriptionTicket, SubscriptionTicketAdmin)
+admin.site.register(Subscription, SubscriptionAdmin)
 
 admin.site.register(BusinessAccount)
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import PasswordChangeForm, ManagementStaffCreationForm, SearchStaffForm, GenerateVoucherForm
+from .forms import PasswordChangeForm, ManagementStaffCreationForm, SearchStaffForm, GenerateSubscriptionForm
 from django.contrib.auth import authenticate, update_session_auth_hash
 from .models import Profile
 from django.core.paginator import Paginator
@@ -10,11 +10,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import SubscriptionPlan
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib import messages
-from .models import SubscriptionTicket
+from .models import Subscription
 
 
 # 404 Error Page.
@@ -125,10 +124,27 @@ class SubscriptionPlanDeleteView(LoginRequiredMixin, UserPassesTestMixin, Delete
         return super().delete(request, *args, **kwargs)
 
 
+class SubscriptionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Subscription
+    template_name = 'accounts/confirm_subscription_delete.html'
+    success_url = '/subscription/list/'
+    context_object_name = 'subscription'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add additional context data here
+        context['page_title'] = 'Delete Subscription'
+        return context
+
+    # Define a custom test function to check if the user is a superuser
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
 @login_required(login_url='account-login')
 def generate_voucher(request):
     if request.method == 'POST':
-        form = GenerateVoucherForm(request.POST)
+        form = GenerateSubscriptionForm(request.POST)
         if form.is_valid():
             plan = form.cleaned_data['plan_id']
             duration_days = form.cleaned_data['duration_days']
@@ -136,36 +152,36 @@ def generate_voucher(request):
             # Calculate the expiration date based on the plan duration
             expiration_date = timezone.now() + timedelta(days=int(duration_days))
 
-            # Create a new SubscriptionTicket instance
-            subscription_ticket = SubscriptionTicket(plan=plan, expiration_date=expiration_date, duration_days=duration_days)
+            # Create a new Subscription instance
+            subscription_ticket = Subscription(plan=plan, expiration_date=expiration_date, duration_days=duration_days)
 
             # Save the subscription ticket
             subscription_ticket.save()
 
             # Redirect to a success page or display a success message
-            return redirect('voucher-list')
+            return redirect('subscription-list')
 
     else:
-        form = GenerateVoucherForm()
+        form = GenerateSubscriptionForm()
 
     context = {
         'form': form,
-        'page_title': 'Generate Voucher',
+        'page_title': 'Generate Subscription',
     }
 
-    return render(request, 'accounts/generate_voucher.html', context)
+    return render(request, 'accounts/generate_subscription.html', context)
 
 
-class VoucherListView(ListView):
-    model = SubscriptionTicket
-    template_name = 'accounts/voucher_list.html'
-    context_object_name = 'voucher_list'  # Optional: Use a custom name for the object_list
+class SubscriptionListView(ListView):
+    model = Subscription
+    template_name = 'accounts/subscription_list.html'
+    context_object_name = 'subscription'  # Optional: Use a custom name for the object_list
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Add additional context data here
-        context['additional_data'] = 'Some additional data you want to pass to the template'
+        context['page_title'] = 'Subscription List'
         return context
 
 

@@ -65,13 +65,14 @@
                
                 <!--Customer List-->
                 <div class="col-lg-12 m-b30">
-                    <div class="table-responsive mb-8">
-                        {% if voucher_list %}
+                    <div class="overflow-x:auto mb-8">
+                        {% if subscription %}
+                        
                           <table class="table bg-white">
                               <thead class="bg-info text-white">
                                 <tr>
                                   <th scope="col">#</th>
-                                  <th scope="col" style="color: white;">Plan Name</th>
+                                  <th scope="col" style="color: white; " nowrap>Plan Name</th>
                                 
                                   <th scope="col" style="color: white;" nowrap>Pin</th>
 
@@ -79,13 +80,13 @@
 
                                   <th scope="col" style="color: white;" nowrap>Expiring Date</th>
 
-
+                                  <th scope="col" style="color: white;" nowrap>Action</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 
               
-                                {% for pin in voucher_list %}
+                                {% for pin in subscription %}
                                 <tr>
                                   <th scope="row">{{ forloop.counter }}</th>
 
@@ -93,17 +94,17 @@
                                     {{pin.plan}}
                                   </td>
                                  
-                                  <td>
+                                  <td nowrap>
                                     {{pin.pin}}
                                   </td>
 
-                                  <td>
+                                  <td nowrap>
                                     {{pin.duration_days}} Day(s)
                                   </td>
 
-                                  <td>{{ pin.expiration_date}}</td>
+                                  <td nowrap>{{ pin.expiration_date}}</td>
 
-                                 
+                                  <td nowrap><a class="btn btn-success" href=" {% url 'delete-subscription' pin.pk %} ">Delete</a></td>
                                       
                                   
                                 </tr>
@@ -113,7 +114,7 @@
                                  
                               </tbody>
                           </table>
-                            
+                        
                         {% else %}  
                              <span style="text-align: center; color:red;">No Voucher Yet</span>    
                         {% endif %}

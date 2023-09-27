@@ -53,7 +53,7 @@
 
                                   <th scope="col" style="color: white;" nowrap>Price (N)</th>
 
-                                  
+                                  <th scope="col" style="color: white;" nowrap>Action</th>
                                   
                                 </tr>
                               </thead>
@@ -76,7 +76,7 @@
 
                                   <td>N{{ subscription_plan.price }}</td>
 
-                                  
+                                  <td> <a class="btn btn-success" href=" {% url 'subscription-plan-delete' subscription_plan.pk %} ">Delete</a> </td>
 
                                   </td>
                                 </tr>

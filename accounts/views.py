@@ -58,7 +58,7 @@ class SubscriptionPlanCreateView(LoginRequiredMixin, UserPassesTestMixin, Create
     def form_valid(self, form):
         # Save the form and add a success message
         form.save()
-        messages.success(self.request, 'Subscription plan updated successfully.')
+        messages.success(self.request, 'Subscription Plan Created Successfully.')
         return super().form_valid(form)
 
     success_url = reverse_lazy('subscription-plan-list')
@@ -77,10 +77,10 @@ class SubscriptionPlanListView(LoginRequiredMixin, UserPassesTestMixin, ListView
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Add additional context data here
-        context['additional_data'] = 'Some additional data you want to pass to the template'
+        context['page_title'] = 'Plan List'
         return context
 
-    # Define a custom test function to check if the user is a superuser
+    # function to check if the user is a superuser
     def test_func(self):
         return self.request.user.is_superuser
 
@@ -89,7 +89,7 @@ class SubscriptionPlanDetailView(LoginRequiredMixin, UserPassesTestMixin, Detail
     model = SubscriptionPlan
     template_name = 'subscription_plan_detail.html'
 
-    # Define a custom test function to check if the user is a superuser
+    # function to check if the user is a superuser
     def test_func(self):
         return self.request.user.is_superuser
 
@@ -106,12 +106,23 @@ class SubscriptionPlanUpdateView(LoginRequiredMixin, UserPassesTestMixin, Update
 
 class SubscriptionPlanDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = SubscriptionPlan
-    template_name = 'subscription_plan_confirm_delete.html'
+    template_name = 'accounts/confirm_delete_plan.html'
     success_url = '/subscription-plans/'
+    context_object_name = 'plan'  # the context object name
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add additional context data here
+        context['page_title'] = 'Delete Plan'
+        return context
 
     # Define a custom test function to check if the user is a superuser
     def test_func(self):
         return self.request.user.is_superuser
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Subscription plan Deleted successfully.')  # Success message
+        return super().delete(request, *args, **kwargs)
 
 
 @login_required(login_url='account-login')

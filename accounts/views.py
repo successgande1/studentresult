@@ -9,7 +9,7 @@ from .forms import SubscriptionPlanForm
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import SubscriptionPlan
 from django.urls import reverse_lazy
-from django.http import JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from datetime import timedelta
@@ -50,7 +50,7 @@ def user_profile(request):
     return render(request, 'accounts/profile.html', context)
 
 
-class SubscriptionPlanCreateView(CreateView):
+class SubscriptionPlanCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = SubscriptionPlan
     template_name = 'accounts/subscription_plan_form.html'
     form_class = SubscriptionPlanForm  # Use the form for creating
@@ -63,8 +63,12 @@ class SubscriptionPlanCreateView(CreateView):
 
     success_url = reverse_lazy('subscription-plan-list')
 
+    # Define a custom test function to check if the user is a superuser
+    def test_func(self):
+        return self.request.user.is_superuser
 
-class SubscriptionPlanListView(ListView):
+
+class SubscriptionPlanListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = SubscriptionPlan
     template_name = 'accounts/subscription_plan_list.html'
     context_object_name = 'subscription_plans'  # Optional: Use a custom name for the object_list
@@ -76,24 +80,41 @@ class SubscriptionPlanListView(ListView):
         context['additional_data'] = 'Some additional data you want to pass to the template'
         return context
 
+    # Define a custom test function to check if the user is a superuser
+    def test_func(self):
+        return self.request.user.is_superuser
 
-class SubscriptionPlanDetailView(DetailView):
+
+class SubscriptionPlanDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = SubscriptionPlan
     template_name = 'subscription_plan_detail.html'
 
+    # Define a custom test function to check if the user is a superuser
+    def test_func(self):
+        return self.request.user.is_superuser
 
-class SubscriptionPlanUpdateView(UpdateView):
+
+class SubscriptionPlanUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = SubscriptionPlan
     template_name = 'subscription_plan_form.html'
     form_class = SubscriptionPlanForm  # Use the form for updating
 
+    # Define a custom test function to check if the user is a superuser
+    def test_func(self):
+        return self.request.user.is_superuser
 
-class SubscriptionPlanDeleteView(DeleteView):
+
+class SubscriptionPlanDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = SubscriptionPlan
     template_name = 'subscription_plan_confirm_delete.html'
     success_url = '/subscription-plans/'
 
+    # Define a custom test function to check if the user is a superuser
+    def test_func(self):
+        return self.request.user.is_superuser
 
+
+@login_required(login_url='account-login')
 def generate_voucher(request):
     if request.method == 'POST':
         form = GenerateVoucherForm(request.POST)

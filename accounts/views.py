@@ -220,7 +220,7 @@ class SubscriptionDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView
         # Add additional context data here
         context['page_title'] = 'Subscription Detail'
         return context
-   
+
     # Define a custom test function to check if the user is a superuser
     def test_func(self):
         return self.request.user.is_superuser

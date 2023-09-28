@@ -7,7 +7,7 @@ from .views import (
     SubscriptionPlanCreateView,
     SubscriptionPlanUpdateView,
     SubscriptionPlanDeleteView, SubscriptionListView,
-    SubscriptionDeleteView
+    SubscriptionDeleteView, SubscriptionDetailView
 )
 from django.contrib.auth import views as auth_view
 
@@ -19,8 +19,9 @@ urlpatterns = [
     path('subscription-plans/create/', SubscriptionPlanCreateView.as_view(), name='subscription-plan-create'),
     path('subscription/plans/<int:pk>/update/', SubscriptionPlanUpdateView.as_view(), name='subscription-plan-update'),
     path('subscription-plans/<int:pk>/delete/', SubscriptionPlanDeleteView.as_view(), name='subscription-plan-delete'),
-    path('create/subscription/', views.generate_voucher, name='create-subscription'),
+    path('create/subscription/', views.generate_subscription, name='create-subscription'),
     path('subscription/list/', SubscriptionListView.as_view(), name='subscription-list'),
+    path('subscription/detail/<int:pk>/', SubscriptionDetailView.as_view(), name='subscription-detail'),
     path('subscription/<int:pk>/delete/', SubscriptionDeleteView.as_view(), name='delete-subscription'),
     path('create/management/staff/', views.create_management_staff, name='account-create-management-staff'),
     path('staff/list/', views.staff_list, name='account-staff-list'),

@@ -40,38 +40,45 @@
                         <div class="col-md-8"> 
                            <div class="card">
                                <div class="card-header bg-info text-white">
-                                {{ plan.name }} Detail
+                                {{ subscription.plan }} Detail
                                </div>
                                <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-8">
-                                          <span class="h4">{{plan.name}} Plan Information</span><a class="btn btn-info btn-sm float-right" href=" {% url 'subscription-plan-update' plan.pk %} ">Update</a>
+                                          <span style="font-size: 1rem;">{{subscription.plan.name}} Subscription Information</span><a class="btn btn-info btn-sm float-right" href="  ">Update</a>
                                           <hr>
                                         <table class="table bg-white table-borderless">
                                             <tbody>
                                               
                                                   <tr>
-                                                    <th scope="row">Name</th>
+                                                    <th scope="row" nowrap>Subscription Name</th>
                                                     <td>
                                                       
 
-                                                      {{plan.name|capfirst}}
+                                                      {{subscription.plan.name|capfirst}}
                                                       
                                                       
                                                       
                                                     </td>
                                                   </tr>   
                                                   <tr>
-                                                    <th scope="row">Description</th>
+                                                    <th scope="row">Pin</th>
                                                     <td nowrap>
-                                                      {{plan.description}}
+                                                      {{subscription.pin}}
                                                     </td>                                   
                                                   </tr>
                                                   <tr>
-                                                    <th scope="row">Price</th>
-                                                    <td>{{plan.price| intcomma}}</td>                                   
+                                                    <th scope="row" nowrap>Number of Days</th>
+                                                    <td>{{subscription.duration_days}} Days</td>                                   
                                                   </tr>  
-                                                  
+                                                  <tr>
+                                                    <th scope="row" nowrap>Expiring Date</th>
+                                                    <td>{{subscription.expiration_date}}</td>                                   
+                                                  </tr> 
+                                                  <tr>
+                                                    <th scope="row" nowrap>Subscription Amount</th>
+                                                    <td>N{{subscription.plan.price| intcomma}}</td>                                   
+                                                  </tr> 
                                                  
                                                                    
                                              </tbody>

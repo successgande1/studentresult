@@ -6,7 +6,7 @@
 
 {% load crispy_forms_tags %}
 
-
+{% load humanizelib %}
 
 {% block content %}
 
@@ -78,6 +78,8 @@
 
                                   <th scope="col" style="color: white;" nowrap>Duration</th>
 
+                                  <th scope="col" style="color: white;" nowrap>Amount</th>
+
                                   <th scope="col" style="color: white;" nowrap>Expiring Date</th>
 
                                   <th scope="col" style="color: white;" nowrap>Action</th>
@@ -91,7 +93,8 @@
                                   <th scope="row">{{ forloop.counter }}</th>
 
                                   <td nowrap>
-                                    {{pin.plan}}
+                                    <a href="{% url 'subscription-detail' pin.pk %}">{{pin.plan}}</a>
+                                    
                                   </td>
                                  
                                   <td nowrap>
@@ -102,9 +105,19 @@
                                     {{pin.duration_days}} Day(s)
                                   </td>
 
+                                  <td nowrap>
+                                    N{{pin.plan.price| intcomma}} 
+                                  </td>
+
+
                                   <td nowrap>{{ pin.expiration_date}}</td>
 
-                                  <td nowrap><a class="btn btn-success" href=" {% url 'delete-subscription' pin.pk %} ">Delete</a></td>
+                                  <td nowrap>
+                                    <div class="button-container">
+                                    <a class="btn btn-info withdrawal-button" href=" {% url 'delete-subscription' pin.pk %} ">Delete</a>
+                                    <a class="btn btn-info deposit-button" href=" {% url 'subscription-detail' pin.pk %} ">Detail</a>
+                                  </div>
+                                  </td>
                                       
                                   
                                 </tr>

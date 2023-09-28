@@ -163,7 +163,7 @@ class SubscriptionDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView
 
 
 @login_required(login_url='account-login')
-def generate_voucher(request):
+def generate_subscription(request):
     if request.method == 'POST':
         form = GenerateSubscriptionForm(request.POST)
         if form.is_valid():
@@ -187,13 +187,13 @@ def generate_voucher(request):
 
     context = {
         'form': form,
-        'page_title': 'Generate Subscription',
+        'page_title': 'Generate Subscription', 
     }
 
     return render(request, 'accounts/generate_subscription.html', context)
 
 
-class SubscriptionListView(ListView):
+class SubscriptionListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Subscription
     template_name = 'accounts/subscription_list.html'
     context_object_name = 'subscription'  # Optional: Use a custom name for the object_list
@@ -204,6 +204,26 @@ class SubscriptionListView(ListView):
         # Add additional context data here
         context['page_title'] = 'Subscription List'
         return context
+
+    # Define a custom test function to check if the user is a superuser
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class SubscriptionDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = Subscription
+    template_name = 'accounts/subscription_detail.html'
+    context_object_name = 'subscription'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add additional context data here
+        context['page_title'] = 'Subscription Detail'
+        return context
+   
+    # Define a custom test function to check if the user is a superuser
+    def test_func(self):
+        return self.request.user.is_superuser
 
 
 # Change user password view

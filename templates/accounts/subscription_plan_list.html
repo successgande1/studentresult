@@ -65,9 +65,9 @@
                                 <tr>
                                   <th scope="row">{{ forloop.counter }}</th>
 
-                                  <td nowrap>
+                                  <td nowrap> <a href=" {% url 'subscription-plan-detail' subscription_plan.pk %} ">{{ subscription_plan.name }}</a>
                                     
-                                    {{ subscription_plan.name }}
+                                    
                                     
                                   </td>
                                  
@@ -77,8 +77,13 @@
 
                                   <td>N{{ subscription_plan.price }}</td>
 
-                                  <td> <a class="btn btn-success" href=" {% url 'subscription-plan-delete' subscription_plan.pk %} ">Delete</a> </td>
+                                  <td> 
+                                    <div class="button-container">
 
+                                    <a class="btn btn-info withdrawal-button" href=" {% url 'subscription-plan-delete' subscription_plan.pk %} ">Delete</a> 
+                                    <a class="btn btn-info deposit-button" href=" {% url 'subscription-plan-detail' subscription_plan.pk %} ">Detail</a> 
+                                  
+                                  </div>
                                   </td>
                                 </tr>
                                 {% endfor %}    

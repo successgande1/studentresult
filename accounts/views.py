@@ -86,11 +86,19 @@ class SubscriptionPlanListView(LoginRequiredMixin, UserPassesTestMixin, ListView
 
 class SubscriptionPlanDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = SubscriptionPlan
-    template_name = 'subscription_plan_detail.html'
+    template_name = 'accounts/subscription_plan_detail.html'
+    context_object_name = 'plan'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add additional context data here
+        context['page_title'] = 'Plan Detail'
+        return context
 
     # function to check if the user is a superuser
     def test_func(self):
         return self.request.user.is_superuser
+
 
 
 class SubscriptionPlanUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

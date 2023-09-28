@@ -44,7 +44,7 @@
                                <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-8">
-                                          <span class="h4">{{plan.name}} Plan Information</span><a class="btn btn-info btn-sm float-right" href=" ">Update</a>
+                                          <span class="h4">{{plan.name}} Plan Information</span><a class="btn btn-info btn-sm float-right" href=" {% url 'subscription-plan-update' plan.pk %} ">Update</a>
                                           <hr>
                                         <table class="table bg-white table-borderless">
                                             <tbody>

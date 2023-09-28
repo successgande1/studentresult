@@ -38,7 +38,14 @@
 
                             {{ form | crispy }}
                     
-                    <input class="btn btn-success" type="submit" value="Create Plan">
+                    <input class="btn btn-success" type="submit" 
+                    value="
+                    {% if page_title == 'Update Plan' %}
+                    Update Plan
+                    {% else %}
+                    Create Plan
+                    {% endif %}
+                    ">
 
                         </form>
                     </div>

@@ -100,11 +100,24 @@ class SubscriptionPlanDetailView(LoginRequiredMixin, UserPassesTestMixin, Detail
         return self.request.user.is_superuser
 
 
-
 class SubscriptionPlanUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = SubscriptionPlan
-    template_name = 'subscription_plan_form.html'
+    template_name = 'accounts/subscription_plan_form.html'
     form_class = SubscriptionPlanForm  # Use the form for updating
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add additional context data here
+        context['page_title'] = 'Update Plan'
+        return context
+
+    def form_valid(self, form):
+        # Save the form and add a success message
+        form.save()
+        messages.success(self.request, 'Subscription Plan Update Successfully.')
+        return super().form_valid(form)
+
+    success_url = reverse_lazy('subscription-plan-list')
 
     # Define a custom test function to check if the user is a superuser
     def test_func(self):

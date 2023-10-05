@@ -44,7 +44,7 @@
                                <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-8">
-                                          <span class="h4">Profile Information</span><a class="btn btn-info btn-sm float-right" href=" ">Update</a>
+                                          <span class="h4">Profile Information</span><a class="btn btn-info btn-sm float-right" href=" {% url 'account_profile_update' %} ">Update</a>
                                           <hr>
                                         <table class="table bg-white table-borderless">
                                             <tbody>
@@ -76,6 +76,10 @@
                                                     <th scope="row">Address</th>
                                                     <td>{{user.profile.address|capfirst}}</td>                                   
                                                   </tr>  
+                                                  <tr>
+                                                    <th scope="row">School Name:</th>
+                                                    <td>{{user.profile.organization|capfirst}}</td>                                   
+                                                  </tr>
                                                   <tr>
                                                     <th scope="row">Role</th>
                                                     

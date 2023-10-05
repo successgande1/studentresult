@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %} User Login {% endblock %}
+{% block title %} {{page_title}} {% endblock %}
 
 {% load crispy_forms_tags %}
 
@@ -17,8 +17,8 @@
 		<div class="account-form-inner">
 			<div class="account-container"> 
 				<div class="heading-bx left">
-					<h2 class="title-head">Login to your <span>Account</span></h2>
-					<span>Don't Have Account Yet? <a href=" {% url 'create_business_account' %} ">Create School Account</a></span>
+					<h2 class="title-head">Activate School <span>Subscription</span></h2>
+					
 				</div>	
 				<!--Alert Message Division-->
 				{% include 'partials/_alerts.html' %}
@@ -28,7 +28,7 @@
 
                     {{ form | crispy }}
 
-                    <input class="btn btn-success" type="submit" value="login">
+                    <input class="btn btn-success" type="submit" value="Activate Subscription">
 				</form>
 			</div>
 		</div>

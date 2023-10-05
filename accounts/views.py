@@ -5,15 +5,22 @@ from django.contrib.auth import authenticate, update_session_auth_hash
 from .models import Profile
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .forms import SubscriptionPlanForm
+from .forms import (SubscriptionPlanForm,
+                    BusinessAccountForm,
+                    PINActivationForm,
+                    AdminUserCreationForm,
+                    ProfileUpdateForm,
+                    TeacherCreationForm
+                    )
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import SubscriptionPlan
+from .models import SubscriptionPlan, BusinessAccount, SubscriptionHistory
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib import messages
 from .models import Subscription
+from .helpers import (get_profile, profile_complete)
 
 
 # 404 Error Page.
@@ -33,11 +40,35 @@ def custom_server_not_found(request, exception=None):
 
 @login_required(login_url='account-login')
 def index(request):
-
+    logged_user = request.user
+    # Check if logged in user is admin and profile is completed
+    if logged_user.profile.role in ['admin', 'principal', 'dean']:
+        profile = get_profile(logged_user)
+        if not profile_complete(profile):
+            return redirect('account_profile_update')
     context = {
         'page_title': 'Dashboard',
     }
     return render(request, 'accounts/index.html', context)
+
+
+@login_required(login_url='account-login')
+def user_profile_update(request):
+    if request.method == 'POST':
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        # Check if form is valid
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, 'Your Profile Updated Successfully')
+            return redirect('account_profile')
+    else:
+        profile_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'profile_form': profile_form,
+        'page_title': 'Profile Update',
+    }
+    return render(request, 'accounts/update_profile.html', context)
 
 
 @login_required(login_url='account-login')
@@ -226,6 +257,136 @@ class SubscriptionDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView
         return self.request.user.is_superuser
 
 
+# Create Business Account View
+def create_business_account(request):
+    if request.method == 'POST':
+        form = BusinessAccountForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            account_type = form.cleaned_data['account_type']
+            address = form.cleaned_data['address']
+            lga = form.cleaned_data['lga']
+            state = form.cleaned_data['state']
+            # Check if Business Account already Exist and redirect accordingly
+            try:
+                business_account = BusinessAccount.objects.get(name=name)
+                if business_account.is_active:
+                    # Try if Admin User for School already exist and redirect accordingly.
+                    try:
+                       school_admin = Profile.objects.get(organization=business_account)
+                    except Profile.DoesNotExist:
+                        messages.warning(request, f'Create Admin User for {business_account} ')
+                        return redirect('create_admin_business_user', business_account_id=business_account.pk)
+                elif not business_account.is_active:
+                    messages.success(request, f'{business_account} needs Subscription ')
+                    return redirect('activate_business_account', business_account_id=business_account.pk)
+                
+            except BusinessAccount.DoesNotExist:
+                business_account = BusinessAccount.objects.create(name=name, account_type=account_type, address=address, lga=lga, state=state)
+                # Redirect to PIN activation view
+                return redirect('activate_business_account', business_account_id=business_account.pk)           
+    else:
+        form = BusinessAccountForm()
+    context = {
+        'form': form,
+        'page_title': 'Business Acct. Creation',
+    }
+
+    return render(request, 'accounts/create_business_account.html', context)
+
+
+# Business Account Activate Pin view
+def pin_activation(request, business_account_id):
+    try:
+        business_account = BusinessAccount.objects.get(pk=business_account_id)
+
+        if request.method == 'POST':
+            form = PINActivationForm(request.POST)
+            if form.is_valid():
+                # Get the PIN entered by the user
+                user_entered_pin = form.cleaned_data['pin']
+                
+                # Check if the entered PIN matches the stored PIN in the Subscription model
+                try:
+                    subscription = Subscription.objects.get(pin=user_entered_pin)
+                    if subscription:
+                        # Check if the subscription is expired
+                        if subscription.is_expired():
+                            messages.error(request, "Subscription has already expired.")
+                            return redirect('activate_business_account')
+                        else:
+                            # Activate the subscription
+                            business_account.is_active = True
+                            business_account.subscription_plan = subscription
+                            business_account.save()
+
+                            # Record the subscription activation in SubscriptionHistory
+                            SubscriptionHistory.objects.create(
+                                business_account=business_account,
+                                plan=subscription.plan,
+                                pin=user_entered_pin,
+                                start_date=timezone.now().date(),
+                                expiration_date=subscription.expiration_date.date()
+                            )
+                            messages.success(request, 'Subscription Activated Successfully.')
+                            # Redirect to Admin User creation view
+                            return redirect('create_admin_business_user', business_account_id=business_account.pk)
+                        
+                except Subscription.DoesNotExist:
+                    # PIN is not found in the Subscription model
+                    messages.error(request, "Invalid PIN. Please try again.")
+                    return redirect('activate_business_account')
+    
+        else:
+            form = PINActivationForm()
+        context = {
+            'form': form,
+            'page_title': 'Activate Subscription',
+        }
+        return render(request, 'accounts/pin_activation.html', context)
+
+    except BusinessAccount.DoesNotExist:
+        # Handle the case where the business account doesn't exist
+        return redirect('create_business_account')
+
+
+# Business Account Create Admin user view
+def create_admin_user(request, business_account_id):
+    try:
+        business_account = BusinessAccount.objects.get(pk=business_account_id)
+
+        if request.method == 'POST':
+            form = AdminUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                # Try to get the User from the Profile Model and redirect to Login if does not exist
+                try:
+                    admin_user = Profile.objects.get(user=user)
+                except Profile.DoesNotExist:
+                    return redirect('create_business_account')
+                else:
+                    # Update the Profile of the Admin with his/her organization and role
+                    admin_user.organization = business_account
+                    admin_user.role = 'admin'
+                    admin_user.save()
+                    messages.success(request, f'Admin Account Created Successfully for {business_account.name} ')
+                    # Redirect to user login page
+                    return redirect('account-login')
+
+        else:
+            form = AdminUserCreationForm()
+        context = {
+            'form': form,
+            'page_title': 'Create Admin',
+        }
+
+        return render(request, 'accounts/create_admin_user.html', context)
+
+    except BusinessAccount.DoesNotExist:
+        # Handle the case where the business account doesn't exist
+        return redirect('create_business_account')
+
+
 # Change user password view
 @login_required(login_url='accounts-login')
 def change_password(request):
@@ -267,8 +428,8 @@ def password_change_done(request):
 def create_management_staff(request):
     logged_user = request.user
     try:
-        user_profile = Profile.objects.select_related('user').get(user=logged_user)
-        user_role = user_profile.role
+        admin_user_profile = Profile.objects.select_related('user').get(user=logged_user)
+        user_role = admin_user_profile.role
         # Check if logged in user is super admin else don't allow access
         if logged_user.is_superuser or user_role == 'admin':
             if request.method == 'POST':
@@ -282,6 +443,7 @@ def create_management_staff(request):
                     # Get the Created New user's profile
                     profile = Profile.objects.get(user=user)
                     # Update the profile DB role field
+                    profile.organization = admin_user_profile.organization
                     profile.role = role
                     # Save the changes to the Profile DB
                     profile.save()
@@ -292,6 +454,47 @@ def create_management_staff(request):
                 form = ManagementStaffCreationForm()
             context = {
                 'page_title': 'Create User',
+                'form': form
+            }
+            return render(request, 'accounts/create_user.html', context)
+        else:
+            return redirect('accounts-dashboard')
+    except Profile.DoesNotExist:
+        # Handle the case when the profile doesn't exist
+        return redirect('accounts-dashboard')
+    
+
+# Create Teacher user view
+@login_required(login_url='accounts-login')
+def create_teacher_user(request):
+    logged_user = request.user
+    try:
+        admin_user_profile = Profile.objects.select_related('user').get(user=logged_user)
+        user_role = admin_user_profile.role
+        # Check if logged in user is super admin else don't allow access
+        if logged_user.is_superuser or user_role == 'dean':
+            if request.method == 'POST':
+                
+                form = TeacherCreationForm(request.POST)
+                
+                if form.is_valid():
+                    user = form.save()
+                    role = form.cleaned_data.get('role')
+
+                    # Get the Created New user's profile
+                    profile = Profile.objects.get(user=user)
+                    # Update the profile DB role field
+                    profile.organization = admin_user_profile.organization
+                    profile.role = role
+                    # Save the changes to the Profile DB
+                    profile.save()
+
+                    messages.success(request, f'{role} Created successfully.')
+                    return redirect('account-staff-list')
+            else:
+                form = TeacherCreationForm()
+            context = {
+                'page_title': 'Create Teacher',
                 'form': form
             }
             return render(request, 'accounts/create_user.html', context)

@@ -42,7 +42,7 @@ class Subscription(models.Model):
     duration_days = models.IntegerField()
 
     def __str__(self):
-        return f'Ticket for {self.plan} - Pin: {self.pin}'
+        return f'{self.plan} - {self.pin}'
 
     def is_expired(self):
         return timezone.now() > self.expiration_date
@@ -67,13 +67,20 @@ class Subscription(models.Model):
 
 
 class BusinessAccount(models.Model):
+    ACCOUNT_CHOICES = [
+        ('NURSERY & PRIMARY SCHOOL', 'Nursery & Primary School'),
+        ('JUNIOR & SENIOR SECONDARY SCHOOL', 'Junior & Senior Secondary School'),
+        ('JUNIOR SECONDARY SCHOOL', 'Junior Secondary School'),
+        ('SENIOR SECONDARY SCHOOL', 'Senior Secondary School'),
+    ]
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    account_type = models.CharField(max_length=100, choices=ACCOUNT_CHOICES, null=True)
     address = models.CharField(max_length=200, null=True)
+    lga = models.CharField(max_length=50, null=True)
     state = models.CharField(max_length=50, null=True)
     subscription_plan = models.ForeignKey(Subscription, on_delete=models.CASCADE, null=True)
-    is_active = models.BooleanField(default=True)
-    activated_date = models.DateField(auto_now_add=True)
+    is_active = models.BooleanField(default=False)
+    created_date = models.DateField(auto_now_add=True)
     
     def __str__(self):
         return self.name
@@ -105,7 +112,6 @@ class Profile(models.Model):
     full_name = models.CharField(max_length=60, blank=True)
     phone = models.CharField(max_length=14, blank=True)
     address = models.CharField(max_length=160, blank=True)
-    description = models.CharField(max_length=200, null=True)
     state = models.CharField(max_length=50, choices=STATE_CHOICES, null=True)
     lga = models.CharField(max_length=50, choices=LGA_CHOICES, null=True)
     is_active = models.BooleanField(default=True)  

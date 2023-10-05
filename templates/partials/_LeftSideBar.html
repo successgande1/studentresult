@@ -174,12 +174,22 @@
                         <span class="ttr-label">User Logout</span></a>
                 </li>
 
-                {% elif user.is_authenticated and user.customer.customer %}
+                {% elif user.is_authenticated and user.profile.role == 'dean' %}
 
                 <li>
-                    <a href="" class="ttr-material-button">
-                        <span class="ttr-icon"><i class="ti-comments"></i></span>
-                        <span class="ttr-label">My Request</span></a>
+                    <a href="#" class="ttr-material-button">
+                        <span class="ttr-icon"><i class="ti-user"></i></span>
+                        <span class="ttr-label">Teacher Management</span>
+                        <span class="ttr-arrow-icon"><i class="fa fa-angle-down"></i></span>
+                    </a>
+                    <ul>
+                        <li>
+                            <a href=" {% url 'create_teacher_user' %} " class="ttr-material-button"><span class="ttr-label">Add Teacher</span></a>
+                        </li>
+                        <li>
+                            <a href=" {% url 'account-staff-list' %} " class="ttr-material-button"><span class="ttr-label">View Staff Users</span></a>
+                        </li>
+                    </ul>
                 </li>
 
 
